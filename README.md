@@ -36,25 +36,81 @@ WHERE c.nome = 'Curso 1';
 
 **1. Média das Notas por Cursos:**
 
-![image](https://github.com/user-attachments/assets/7a4b245a-fa63-40df-a5ab-a47be268b6d3)
+```sql
+SELECT c.nome AS curso, AVG(n.nota) AS media_notas
+FROM Cursos AS c
+LEFT JOIN Notas AS n ON c.id = n.curso_id
+GROUP BY c.nome;
+
+```
 
 ![image](https://github.com/user-attachments/assets/43f891ee-032e-4e1e-92cf-d13fa2eca205)
 
 **Stored Procedure para visualizar alunos e seus cursos:**
 
-![image](https://github.com/user-attachments/assets/d5f5c6e8-b4e9-4c7f-aa46-062ce856be66)
+```sql
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_alunos_cursos`()
+BEGIN
+    SELECT a.nome, a.email, a.data_nascimento, n.nota, n.situacao, c.nome AS curso
+    FROM Alunos AS a
+    LEFT JOIN Notas AS n ON n.aluno_id = a.id
+    LEFT JOIN Cursos AS c ON n.curso_id = c.id;
+END
+
+CALL get_alunos_cursos();
+
+```
 
 ![image](https://github.com/user-attachments/assets/569d17d5-6813-4034-8701-f385850a1eaf)
 
 **Função para calcular a nota total de um aluno:**
 
-![image](https://github.com/user-attachments/assets/ff93e9b8-c6e6-44d5-8c5a-dfb80b5de6d9)
+```sql
+DELIMITER //
+CREATE FUNCTION calcula_nota_aluno(id_aluno INT) RETURNS DECIMAL(10,2) DETERMINISTIC
+BEGIN
+    DECLARE NotaTotal DECIMAL(10,2);
+    
+    SELECT COALESCE(SUM(n.nota), 0) INTO NotaTotal
+    FROM Notas n
+    WHERE n.aluno_id = id_aluno;
+    
+    RETURN NotaTotal;
+END //
+
+DELIMITER ;
+
+SELECT calcula_nota_aluno(3) as NotaCalculada;
+
+```
 
 ![image](https://github.com/user-attachments/assets/b360fb63-7fe6-4101-83f2-2c5e6357bd34)
 
 **Trigger para atualizar a situação da nota automaticamente**
 
-![image](https://github.com/user-attachments/assets/c7589344-8c06-4bec-b096-c7e585ec60e6)
+DELIMITER //
+
+```sql
+CREATE TRIGGER before_update_notas
+BEFORE UPDATE ON Notas
+FOR EACH ROW
+BEGIN
+    IF NEW.nota < 6 THEN 
+        SET NEW.situacao = 'Nota abaixo da Média';
+    ELSEIF NEW.nota > 6 THEN 
+        SET NEW.situacao = 'Nota acima da Média';
+    ELSE 
+        SET NEW.situacao = 'Nota na Média';
+    END IF;
+END //
+
+DELIMITER ;
+
+UPDATE Notas
+SET nota = 8.12
+WHERE aluno_id = 14;
+
+```
 
 ![image](https://github.com/user-attachments/assets/a19d129d-8193-40c1-a23a-e49ce43702ad)
 
