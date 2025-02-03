@@ -1,4 +1,4 @@
-# Sistema Educacional - Projeto de Banco de Dados com MySQL
+# Sistema Educacional - MySQL
 
 Este projeto demonstra minhas habilidades em SQL e desenvolvimento de banco de dados usando MySQL.  Ele simula um sistema educacional simples para gerenciar alunos, cursos, professores e notas.
 
