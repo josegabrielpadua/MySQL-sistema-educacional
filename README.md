@@ -23,7 +23,14 @@ Aqui estão alguns exemplos de consultas SQL utilizadas neste projeto:
 
 **1. Alunos Matriculados em um Curso Específico:**
 
-![image](https://github.com/user-attachments/assets/280ac031-076b-403c-a933-03cb30fee5b1)
+```sql
+-- SELECT a.nome, c.nome AS curso
+FROM Alunos AS a
+JOIN Matriculas AS m ON a.id = m.aluno_id
+JOIN Cursos AS c ON m.curso_id = c.id
+WHERE c.nome = 'Curso 1';
+
+```
 
 ![image](https://github.com/user-attachments/assets/02aad15e-6e0a-40e8-9153-12c8cadbc911)
 
