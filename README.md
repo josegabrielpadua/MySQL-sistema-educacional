@@ -24,7 +24,7 @@ Aqui estão alguns exemplos de consultas SQL utilizadas neste projeto:
 **1. Alunos Matriculados em um Curso Específico:**
 
 ```sql
--- SELECT a.nome, c.nome AS curso
+SELECT a.nome, c.nome AS curso
 FROM Alunos AS a
 JOIN Matriculas AS m ON a.id = m.aluno_id
 JOIN Cursos AS c ON m.curso_id = c.id
